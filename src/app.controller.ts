@@ -1,19 +1,18 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Task } from './task.entity';
+import { PrismaService } from './prisma/prisma.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Post()
-  async create(@Body('title') title: string): Promise<Task> {
-    // Nota: en una aplicación real, usarías un DTO aquí
-    return this.appService.create(title);
-  }
+  constructor(private readonly appService: AppService, private readonly prismaService: PrismaService) {}
 
   @Get()
-  async findAll(): Promise<Task[]> {
-    return this.appService.findAll();
+  findAll() {
+    return this.appService.getAllTasks();
+  }
+
+  @Post()
+  createTask(@Body('title') title: string) {
+    return this.appService.createTask(title);
   }
 }
